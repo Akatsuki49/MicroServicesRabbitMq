@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      height: 100%;
+      background-color: #0a0a0a;
+      font-weight: bold;
+      font-family: "DM Sans", sans-serif;
+    }
+    .container-fluid {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-container {
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 10%;
+      background-color: #1b1b1b;
+      color: #f4f4f4;
+      margin-top: 20px;
+    }
+    .text-center {
+      color: #858585;
+    }
+    .btn {
+      background-color: #272727;
+      color: #f4f4f4;      
+    }
+    .btn:hover {
+      background-color: #3a3a3a;
+      color: #f4f4f4;
+    }
+    .form-control {
+      background-color: #3a3a3a ;
+      color: #f4f4f4;
+      border: 1px solid #858585;
+    }
+    .welcome-container {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="welcome-container">
+      <h1 class="text-center">Register Now!</h1>
+    </div>
+    <div class="form-container">
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      <form method="POST" action="{{ url_for('register') }}">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+
+          <button type="submit" class="btn btn-block">Register</button>
+          <a href="/" class="btn btn-block mb-3">Back</a>
+      </form>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
