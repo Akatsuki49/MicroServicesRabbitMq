@@ -42,17 +42,36 @@ def login():
       user = user_collection.find_one({"username": username, "password": password})
       if user:
         session['username'] = username
+        session['type'] = 'customer'
         return redirect(url_for('home', username=username))
+        
+      admin_collection = database.get_collection("admin")
+      admin = admin_collection.find_one({"username": username, "password": password})
+      if admin:
+        session['username'] = username
+        session['type'] = 'admin'
+        return redirect(url_for('inventory', username=username))
       else:
-        error = "Invalid username or password. Please try again."
+        error = "Incorrect username or password. Please try again."
   except Exception as e:
     error = "An error occurred. Please try again."
   return render_template('login.html', error=error)
 
 @server.route('/home/<username>', methods=['GET', 'POST'])
 def home(username):
+  watches = database.get_collection("watches")
+  watch_list = list(watches.find())
+  print(watch_list)
   name = username
-  return render_template('home.html', username=name)
+  return render_template('home.html', username=name, watches = watch_list)
+@server.route('/inventory/<username>', methods=['GET', 'POST'])
+def inventory(username):
+  name = username
+  watches = database.get_collection("watches")
+  watch_list = list(watches.find())
+  print(watch_list)
+  return render_template('inventory.html', username=name)
+
 
 @server.route('/logout')
 def logout():

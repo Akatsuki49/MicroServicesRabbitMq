@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Watch Collection Le France</a>
+    <a class="navbar-brand" href="#">Inventory Management System</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,23 +25,8 @@
       </ul>
     </div>
   </nav>
-  <div class="container">
-    <div class="row">
-      {% for watch in watches %}
-      <div class="col-md-4">
-        <div class="card watch-card">
-          <img src="{{ watch.image }}" class="card-img-top watch-image" alt="{{ watch.model }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ watch.brand }} {{ watch.model }}</h5>
-            <p class="card-text">{{ watch.itemDescription }}</p>
-            <p class="card-text">Stock: {{ watch.stock }}</p>
-            <p class="card-text">Price: ${{ watch.price }}</p>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+  <h1 class="text-center"> Admin page</h1>
+
   <!-- Bootstrap JS (Optional) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
