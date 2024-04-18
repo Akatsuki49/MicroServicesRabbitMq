@@ -3,32 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch Collection Le France</title>
+  <title>Watch Collection</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 </head>
 <style>
-  .watch-image {
-    width: 150px;
-    height: auto;
-    margin: auto;
-  }
+  body, html {
+      height: 100%;
+      background-color: #0a0a0a;
+      font-weight: bold;
+      font-family: "DM Sans", sans-serif;
+    }
+  .watch-card {
+    margin-bottom: 20px;
+    background-color: #858585; 
+    margin-top: 20px;
+    }
+    .watch-image {
+      width: 100%; 
+      height: 300px;
+      object-fit: cover; 
+    }
+    .navbar {
+      background-color: #272727 !important;
+      font-family: "DM Sans", sans-serif; 
+    }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: #ffffff !important;
+      font-weight: bold; 
+    }
 </style>
 <body>
+  {% if session['username'] %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Watch Collection Le France</a>
+    <a class="navbar-brand" href="#">Watch Collection</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        {% if session['username'] %}
         <li class="nav-item">
           <a class="nav-link" href="#">User: {{ session['username'] }}</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/logout">Logout</a>
         </li>
-        {% endif %}
       </ul>
     </div>
   </nav>
@@ -49,6 +72,7 @@
       {% endfor %}
     </div>
   </div>
+  {% endif %}
   <!-- Bootstrap JS (Optional) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
