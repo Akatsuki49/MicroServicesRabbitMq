@@ -6,6 +6,13 @@
   <title>Document</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+  .watch-image {
+    width: 150px;
+    height: auto;
+    margin: auto;
+  }
+</style>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Inventory Management System</a>
@@ -26,6 +33,54 @@
     </div>
   </nav>
   <h1 class="text-center"> Admin page</h1>
+  <br><br>
+  <h2 class="text-center mb-3">Add new item</h2>
+  <form action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="model">Model Name</label>
+        <input type="text" class="form-control" id="model" name="model" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="brand">Brand</label>
+        <input type="text" class="form-control" id="brand" name="brand" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="stock">Stock</label>
+        <input type="number" class="form-control" id="stock" name="stock" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="price">Price</label>
+        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Add Item</button>
+  </form>
+  <h2 class="text-center mb-3">Current Inventory</h2>
+  <div class="container">
+    <div class="row">
+      {% for watch in watches %}
+      <div class="col-md-4">
+        <div class="card watch-card">
+          <img src="{{ watch.image }}" class="card-img-top watch-image" alt="{{ watch.model }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ watch.brand }} {{ watch.model }}</h5>
+            <p class="card-text">{{ watch.itemDescription }}</p>
+            <p class="card-text">Stock: {{ watch.stock }}</p>
+            <p class="card-text">Price: ${{ watch.price }}</p>
+          </div>
+        </div>
+        <br>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
   <!-- Bootstrap JS (Optional) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
