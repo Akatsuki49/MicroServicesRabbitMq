@@ -5,6 +5,12 @@ Microservices communication using RabbitMQ
 ```docker
 docker run --rm -it --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 ```
+* Create virtualenv and install required modules
+```cmd
+python -m virtualenv venv
+venv/Scripts/activate
+pip install -r ./requirements.txt
+```
 * Run the python frontend
 ```cmd
 python ./server.py
