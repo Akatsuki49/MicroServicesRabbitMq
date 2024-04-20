@@ -1,3 +1,5 @@
+import random
+import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 
@@ -79,29 +81,68 @@ def home(username):
 def inventory(username):
     name = username
     watches = database.get_collection("watches")
+    alert_message = ""
 
     if request.method == "POST":
-        model = request.form["model"]
-        brand = request.form["brand"]
-        stock = request.form["stock"]
-        price = request.form["price"]
-        description = request.form["description"]
-        image = "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg"
+        if "deleteItem" in request.form:
+            model = request.form["model"]
+            brand = request.form["brand"]
+            watch_exists = watches.count_documents({"model": model, "brand": brand})
+            if watch_exists > 0:
+                print("\nDeleting this watch ", model, " ", brand, " details\n")
+                watches.delete_one({"model": model, "brand": brand})
+                alert_message = "Item successfully deleted"
+            else:
+                alert_message = (
+                    "Item wasnt found in the database. So, no item was deleted."
+                )
 
-        watches.insert_one(
-            {
-                "model": model,
-                "brand": brand,
-                "stock": stock,
-                "price": price,
-                "description": description,
-                "image": image,
-            }
-        )
+        else:
+            model = request.form["model"]
+            brand = request.form["brand"]
+            stock = request.form["stock"]
+            price = request.form["price"]
+            description = request.form["description"]
+            image = "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg"
+
+            if "addItem" in request.form:
+                watches.insert_one(
+                    {
+                        "model": model,
+                        "brand": brand,
+                        "stock": stock,
+                        "price": price,
+                        "description": description,
+                        "image": image,
+                    }
+                )
+                alert_message = "Item successfully added"
+            elif "updateItem" in request.form:
+                watch_exists = watches.count_documents({"model": model, "brand": brand})
+                if watch_exists > 0:
+                    print("\nUpdating this watch ", model, " ", brand, " details\n")
+                    watches.update_one(
+                        {"model": model, "brand": brand},
+                        {
+                            "$set": {
+                                "stock": stock,
+                                "price": price,
+                                "description": description,
+                                "image": image,
+                            }
+                        },
+                    )
+                    print("Item successfully updated")
+                    alert_message = "Item successfully updated"
+                else:
+                    alert_message = "Item wasnt found in the database."
 
     watch_list = list(watches.find())
     print(watch_list)
-    return render_template("inventory.html", username=name, watches=watch_list)
+
+    return render_template(
+        "inventory.html", username=name, watches=watch_list, alert_message=alert_message
+    )
 
 
 @server.route("/logout")
