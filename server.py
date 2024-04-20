@@ -2,9 +2,17 @@ import random
 import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
+import pika
+import json
+import datetime
 
 client = MongoClient("mongodb://localhost:27017")
 database = client["Inventory"]
+
+connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+channel = connection.channel()
+
+channel.exchange_declare(exchange="login", exchange_type="direct")
 
 server = Flask(__name__)
 server.secret_key = "1234"
@@ -59,6 +67,12 @@ def login():
             if admin:
                 session["username"] = username
                 session["type"] = "admin"
+                channel.basic_publish(
+                    exchange="login",
+                    routing_key="login.notify",
+                    body= json.dumps({"username": username, "login_time": str(datetime.datetime.now())}),
+                )
+                print(" [x] Sent login information")
                 return redirect(url_for("inventory", username=username))
             else:
                 error = "Incorrect username or password. Please try again."
