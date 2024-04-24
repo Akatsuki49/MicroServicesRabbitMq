@@ -1,75 +1,35 @@
-import pika
 import time
-from collections import defaultdict
-from threading import Thread
+import requests
 
-# RabbitMQ connection details
-rabbit_host = 'localhost'
-rabbit_queue = 'health_check_queue'
-
-# Connect to RabbitMQ
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbit_host))
-channel = connection.channel()
-queue = channel.queue_declare(queue=rabbit_queue)
-queue_name = queue.method.queue
-channel.queue_bind(
-    exchange="health_check_queue",
-    queue=queue_name,
-    routing_key="health_check_queue.report",
-)
-
-# Dictionary to store last received time for each service
-last_received = defaultdict(float)
-
-# Health check interval (in seconds)
-health_check_interval = 10
-
-# Flag to indicate whether the consumer is running
-consumer_running = True
+# RabbitMQ management plugin details
+rabbitmq_host = 'localhost'
+rabbitmq_port = 15672  # Default management plugin port
+rabbitmq_user = 'guest'
+rabbitmq_pass = 'guest'
 
 
-def callback(ch, method, properties, body):
-    service_name = body.decode('utf-8')
-    last_received[service_name] = time.time()
-    print(f"Received health check message: {service_name}")
-
-
-# Start consuming messages from the health check queue
-print('Waiting for health check messages. To exit press CTRL+C')
-
-
-def consume():
+def check_rabbitmq_connections():
+    url = f"http://{rabbitmq_host}:{rabbitmq_port}/api/connections"
     try:
-        channel.basic_consume(queue=rabbit_queue,
-                              on_message_callback=callback, auto_ack=True)
-        channel.start_consuming()
-    except KeyboardInterrupt:
-        print("Interrupted by user")
-        global consumer_running
-        consumer_running = False
+        response = requests.get(url, auth=(rabbitmq_user, rabbitmq_pass))
+        if response.status_code == 200:
+            connections = response.json()
+            # print(connections)
+            total_consumers = 0
+            for connection in connections:
+                total_consumers += connection['channels']
+            print(f"Total Consumers: {total_consumers}")
+            for connection in connections:
+                host = connection.get('host')
+                name = connection.get('name')
+                print(f"Host: {host}, Name: {name}")
+        else:
+            print("Failed to fetch RabbitMQ connections")
+    except Exception as e:
+        print(f"Error: {e}")
 
 
-def monitor_health():
-    while consumer_running:
-        time.sleep(health_check_interval)
-        current_time = time.time()
-        for service, last_check in last_received.items():
-            if current_time - last_check > health_check_interval:
-                print(f"Service {service} is unhealthy")
-
-
-# Start consuming messages from the queue
-consume_thread = Thread(target=consume)
-consume_thread.start()
-
-# Start monitoring the health of services
-monitor_thread = Thread(target=monitor_health)
-monitor_thread.start()
-
-# Wait for the threads to finish
-consume_thread.join()
-monitor_thread.join()
-
-# Close the connection
-connection.close()
+if __name__ == '__main__':
+    while True:
+        check_rabbitmq_connections()
+        time.sleep(5)  # Check every 5 seconds
