@@ -102,7 +102,7 @@ def inventory(username):
             brand = request.form["brand"]
             stock = request.form["stock"]
             price = request.form["price"]
-            description = request.form["description"]
+            itemDescription = request.form["itemDescription"]
             image = "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg"
 
             if "addItem" in request.form:
@@ -112,7 +112,7 @@ def inventory(username):
                         "brand": brand,
                         "stock": stock,
                         "price": price,
-                        "description": description,
+                        "itemDescription": itemDescription,
                         "image": image,
                     }
                 )
@@ -127,7 +127,7 @@ def inventory(username):
                             "$set": {
                                 "stock": stock,
                                 "price": price,
-                                "description": description,
+                                "itemDescription": itemDescription,
                                 "image": image,
                             }
                         },
