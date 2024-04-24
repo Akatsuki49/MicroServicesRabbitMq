@@ -115,10 +115,7 @@ def inventory(username):
                 publish_item(item_data)
                 print("Item published")
                 return redirect(url_for("inventory", username=username))
-
-
-                alert_message = "Item successfully added"
-                return redirect(url_for("inventory", username=username))
+            
             elif "updateItem" in request.form:
                 publish_message("update", model, brand,
                                 stock, price, itemDescription)
