@@ -2,6 +2,7 @@ from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from buy_now import handle_buy_now
+from producer import publish_message
 
 client = MongoClient("mongodb://localhost:27017")
 database = client["Inventory"]
@@ -91,10 +92,7 @@ def inventory(username):
         if "deleteItem" in request.form:
             model = request.form["model"]
             brand = request.form["brand"]
-            watch_exists = watches.count_documents(
-                {"model": model, "brand": brand})
-            if watch_exists > 0:
-                watches.delete_one({"model": model, "brand": brand})
+            publish_message("delete", model, brand)
 
         else:
             model = request.form["model"]
@@ -116,22 +114,10 @@ def inventory(username):
                     }
                 )
             elif "updateItem" in request.form:
-                watch_exists = watches.count_documents(
-                    {"model": model, "brand": brand})
-                if watch_exists > 0:
-                    watches.update_one(
-                        {"model": model, "brand": brand},
-                        {
-                            "$set": {
-                                "stock": stock,
-                                "price": price,
-                                "itemDescription": itemDescription,
-                                "image": image,
-                            }
-                        },
-                    )
+                publish_message("update", model, brand,
+                                stock, price, itemDescription)
 
-        return redirect(url_for('inventory', username=username, watch=watch_list))
+        return redirect(url_for("inventory", username=username, watch=watch_list))
 
     return render_template("inventory.html", username=name, watches=watch_list)
 
