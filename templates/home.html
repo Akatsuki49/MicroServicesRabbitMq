@@ -66,6 +66,7 @@
             <p class="card-text">{{ watch.itemDescription }}</p>
             <p class="card-text">Stock: {{ watch.stock }}</p>
             <p class="card-text">Price: ${{ watch.price }}</p>
+            <a href="#" class="btn btn-primary" onclick="{{ buynow(watch._id) }}">Buy Now</a>
           </div>
         </div>
       </div>

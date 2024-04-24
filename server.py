@@ -28,7 +28,8 @@ def register():
             if user:
                 error = "Username already exists. Please choose another."
             else:
-                user_collection.insert_one({"username": username, "password": password})
+                user_collection.insert_one(
+                    {"username": username, "password": password})
                 return redirect(url_for("login"))
     except Exception as e:
         error = "An error occurred. Please try again."
@@ -74,7 +75,13 @@ def home(username):
     watch_list = list(watches.find())
     print(watch_list)
     name = username
-    return render_template("home.html", username=name, watches=watch_list)
+
+    # Define the callback function
+    def buynow(watch_id):
+        # This function will be called when the Buy Now button is clicked
+        # You can perform any necessary actions here, such as adding the item to a shopping cart
+        print(f"Buy Now clicked for watch ID: {watch_id}")
+    return render_template("home.html", username=name, watches=watch_list, buynow=buynow)
 
 
 @server.route("/inventory/<username>", methods=["GET", "POST"])
@@ -87,9 +94,11 @@ def inventory(username):
         if "deleteItem" in request.form:
             model = request.form["model"]
             brand = request.form["brand"]
-            watch_exists = watches.count_documents({"model": model, "brand": brand})
+            watch_exists = watches.count_documents(
+                {"model": model, "brand": brand})
             if watch_exists > 0:
-                print("\nDeleting this watch ", model, " ", brand, " details\n")
+                print("\nDeleting this watch ",
+                      model, " ", brand, " details\n")
                 watches.delete_one({"model": model, "brand": brand})
                 alert_message = "Item successfully deleted"
             else:
@@ -118,9 +127,11 @@ def inventory(username):
                 )
                 alert_message = "Item successfully added"
             elif "updateItem" in request.form:
-                watch_exists = watches.count_documents({"model": model, "brand": brand})
+                watch_exists = watches.count_documents(
+                    {"model": model, "brand": brand})
                 if watch_exists > 0:
-                    print("\nUpdating this watch ", model, " ", brand, " details\n")
+                    print("\nUpdating this watch ",
+                          model, " ", brand, " details\n")
                     watches.update_one(
                         {"model": model, "brand": brand},
                         {
