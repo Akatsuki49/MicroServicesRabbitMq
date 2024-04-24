@@ -73,7 +73,6 @@ def home(username):
     watches = database.get_collection("watches")
 
     watch_list = list(watches.find())
-    print(watch_list)
     name = username
 
     # Define the callback function
@@ -89,9 +88,11 @@ def inventory(username):
     name = username
     watches = database.get_collection("watches")
     alert_message = ""
+    watch_list = list(watches.find())
 
     if request.method == "POST":
         if "deleteItem" in request.form:
+            # Delete item logic
             model = request.form["model"]
             brand = request.form["brand"]
             watch_exists = watches.count_documents(
@@ -102,11 +103,10 @@ def inventory(username):
                 watches.delete_one({"model": model, "brand": brand})
                 alert_message = "Item successfully deleted"
             else:
-                alert_message = (
-                    "Item wasnt found in the database. So, no item was deleted."
-                )
+                alert_message = "Item wasn't found in the database. So, no item was deleted."
 
         else:
+            # Add or update item logic
             model = request.form["model"]
             brand = request.form["brand"]
             stock = request.form["stock"]
@@ -146,14 +146,15 @@ def inventory(username):
                     print("Item successfully updated")
                     alert_message = "Item successfully updated"
                 else:
-                    alert_message = "Item wasnt found in the database."
+                    alert_message = "Item wasn't found in the database."
 
-    watch_list = list(watches.find())
-    print(watch_list)
+        # Redirect after processing the form submission
+        return redirect(url_for('inventory', username=username, watch=watch_list))
 
     return render_template(
         "inventory.html", username=name, watches=watch_list, alert_message=alert_message
     )
+
 
 
 @server.route("/logout")
