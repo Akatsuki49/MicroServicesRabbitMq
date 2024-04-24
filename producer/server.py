@@ -1,11 +1,13 @@
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
+from producer import publish_message
 
 client = MongoClient("mongodb://localhost:27017")
 database = client["Inventory"]
 
 server = Flask(__name__)
 server.secret_key = "1234"
+
 
 @server.route("/", methods=["GET", "POST"])
 def index():
@@ -30,6 +32,7 @@ def register():
     except Exception as e:
         error = "An error occurred. Please try again."
     return render_template("register.html", error=error)
+
 
 @server.route("/login", methods=["POST", "GET"])
 def login():
@@ -62,6 +65,7 @@ def login():
         error = "An error occurred. Please try again."
     return render_template("login.html", error=error)
 
+
 @server.route("/home/<username>", methods=["GET", "POST"])
 def home(username):
     watches = database.get_collection("watches")
@@ -69,6 +73,7 @@ def home(username):
     watch_list = list(watches.find())
     name = username
     return render_template("home.html", username=name, watches=watch_list)
+
 
 @server.route("/inventory/<username>", methods=["GET", "POST"])
 def inventory(username):
@@ -80,9 +85,7 @@ def inventory(username):
         if "deleteItem" in request.form:
             model = request.form["model"]
             brand = request.form["brand"]
-            watch_exists = watches.count_documents({"model": model, "brand": brand})
-            if watch_exists > 0:
-                watches.delete_one({"model": model, "brand": brand})
+            publish_message("delete", model, brand)
 
         else:
             model = request.form["model"]
@@ -104,28 +107,18 @@ def inventory(username):
                     }
                 )
             elif "updateItem" in request.form:
-                watch_exists = watches.count_documents({"model": model, "brand": brand})
-                if watch_exists > 0:
-                    watches.update_one(
-                        {"model": model, "brand": brand},
-                        {
-                            "$set": {
-                                "stock": stock,
-                                "price": price,
-                                "itemDescription": itemDescription,
-                                "image": image,
-                            }
-                        },
-                    )
+                publish_message("update", model, brand, stock, price, itemDescription)
 
-        return redirect(url_for('inventory', username=username, watch=watch_list))
+        return redirect(url_for("inventory", username=username, watch=watch_list))
 
     return render_template("inventory.html", username=name, watches=watch_list)
+
 
 @server.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect(url_for("login"))
+
 
 if __name__ == "__main__":
     server.run(debug=True)
