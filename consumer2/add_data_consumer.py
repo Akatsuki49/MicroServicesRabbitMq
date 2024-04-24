@@ -2,6 +2,9 @@
 # import json
 # from pymongo import MongoClient
 
+# import sys
+
+
 # # RabbitMQ connection parameters
 # rabbitmq_host = "localhost"
 # rabbitmq_port = 5672
@@ -12,6 +15,16 @@
 # mongo_port = 27017
 # mongo_db = "Inventory"
 # mongo_collection = "watches"
+
+
+# try:
+#     connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
+# except pika.exceptions.AMQPConnectionError as e:
+#     print("Failed to connect to RabbitMQ:", e)
+#     sys.exit(1)
+
+
+
 
 # # Connect to RabbitMQ
 # connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
@@ -64,13 +77,13 @@ import json
 from pymongo import MongoClient
 
 # RabbitMQ connection parameters
-rabbitmq_host = "localhost"
+rabbitmq_host = "host.docker.internal"
 rabbitmq_port = 5672
 rabbitmq_queue = "item_creation"
 rabbitmq_exchange = "add_item"
 
 # MongoDB connection parameters
-mongo_host = "localhost"
+mongo_host = "host.docker.internal"
 mongo_port = 27017
 mongo_db = "Inventory"
 mongo_collection = "watches"
