@@ -7,13 +7,59 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet"></head>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+</head>
 <style>
+  body, html {
+      height: 100%;
+      background-color: #0a0a0a;
+      font-weight: bold;
+      font-family: "DM Sans", sans-serif;
+      color: #f4f4f4;
+    }
+  .watch-card {
+    margin-bottom: 20px;
+    background-color: #858585; 
+    margin-top: 20px;
+    color: #1b1b1b !important;
+    }
   .watch-image {
-    width: 150px;
-    height: auto;
-    margin: auto;
-  }
+    width: 100%; 
+    height: 300px;
+    object-fit: cover; 
+    }
+  .navbar {
+    background-color: #272727 !important;
+    font-family: "DM Sans", sans-serif; 
+    }
+
+  .navbar-brand,
+  .navbar-nav .nav-link {
+    color: #ffffff !important;
+    font-weight: bold; 
+    }
+  .form-control {
+    background-color: #3a3a3a ;
+    color: #f4f4f4;
+    border: 1px solid #858585;
+    }
+
+  .form-container {
+    background-color: #1b1b1b;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #f4f4f4;
+    }
+  .btn {
+    background-color: #272727;
+    color: #f4f4f4;   
+    outline: #0a0a0a;
+    }
+  .btn:hover {
+    background-color: #3a3a3a;
+    color: #f4f4f4;
+    }
 </style>
 <body>
   {% if session['username'] %}
@@ -33,82 +79,88 @@
       </ul>
     </div>
   </nav>
-  <h1 class="text-center"> Admin page</h1>
-  <br><br>
-  <h2 class="text-center mb-3">Add new item</h2>
-  <form id="addItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
-        <label for="model">Model Name</label>
-        <input type="text" class="form-control" id="model" name="model" required>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="brand">Brand</label>
-        <input type="text" class="form-control" id="brand" name="brand" required>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
-        <label for="stock">Stock</label>
-        <input type="number" class="form-control" id="stock" name="stock" required>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="price">Price</label>
-        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="itemDescription">Description</label>
-      <textarea class="form-control" id="itemDescription" name="itemDescription" rows="3" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block" name="addItem">Add Item</button>
-  </form>
-
-  <h2 class="text-center mb-3">Modify Existing Stock</h2>
-  <form id="modifyItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
-        <label for="model">Model Name</label>
-        <input type="text" class="form-control" id="model" name="model" required>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="brand">Brand</label>
-        <input type="text" class="form-control" id="brand" name="brand" required>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
-        <label for="stock">Stock</label>
-        <input type="number" class="form-control" id="stock" name="stock" required>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label for="price">Price</label>
-        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="itemDescription">Description</label>
-      <textarea class="form-control" id="itemDescription" name="itemDescription" rows="3" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block" name="updateItem">Update Item</button>
-  </form>
   <br><br>
 
-  <h2 class="text-center mb-3">Remove Stock</h2>
-  <form id="deleteItem" class="mx-5 mb-5" action="{{ url_for('inventory', username=session['username']) }}" method="post">
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
-        <label for="model">Model Name</label>
-        <input type="text" class="form-control" id="model" name="model" required>
+  <!-- Wrap forms in containers -->
+  <div class="container form-container">
+    <h2 class="text-center mb-3">Add new item</h2>
+    <form id="addItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="model">Model Name</label>
+          <input type="text" class="form-control" id="model" name="model" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="brand">Brand</label>
+          <input type="text" class="form-control" id="brand" name="brand" required>
+        </div>
       </div>
-      <div class="col-md-6 mb-3">
-        <label for="brand">Brand</label>
-        <input type="text" class="form-control" id="brand" name="brand" required>
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="stock">Stock</label>
+          <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="price">Price</label>
+          <input type="number" step="0.01" class="form-control" id="price" name="price" min="0" required>
+        </div>
       </div>
-      <button type="submit" name="deleteItem" class="btn btn-primary btn-block">Delete Item</button>
-    </div>
-  </form>
+      <div class="form-group">
+        <label for="itemDescription">Description</label>
+        <textarea class="form-control" id="itemDescription" name="itemDescription" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-block" name="addItem">Add Item</button>
+    </form>
+  </div>
 
+  <div class="container form-container">
+    <h2 class="text-center mb-3">Modify Existing Stock</h2>
+    <form id="modifyItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="model">Model Name</label>
+          <input type="text" class="form-control" id="model" name="model" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="brand">Brand</label>
+          <input type="text" class="form-control" id="brand" name="brand" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="stock">Stock</label>
+          <input type="number" class="form-control" id="stock" name="stock" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="price">Price</label>
+          <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="itemDescription">Description</label>
+        <textarea class="form-control" id="itemDescription" name="itemDescription" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-block" name="updateItem">Update Item</button>
+    </form>
+  </div>
+
+  <div class="container form-container">
+    <h2 class="text-center mb-3">Remove Stock</h2>
+    <form id="deleteItem" class="mx-5 mb-5" action="{{ url_for('inventory', username=session['username']) }}" method="post">
+      <div class="form-row">
+        <div class="col-md-6 mb-3">
+          <label for="model">Model Name</label>
+          <input type="text" class="form-control" id="model" name="model" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="brand">Brand</label>
+          <input type="text" class="form-control" id="brand" name="brand" required>
+        </div>
+        <button type="submit" name="deleteItem" class="btn btn-block">Delete Item</button>
+      </div>
+    </form>
+  </div>
+  
   <h2 class="text-center mb-3">Current Inventory</h2>
   <div class="container">
     <div class="row">
@@ -133,13 +185,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
-    $(document).ready(function() {
-    var alertMessage = "{{ alert_message }}";
-    if (alertMessage) {
-      alert(alertMessage);
-    }
-    });
-  </script>
+  
 </body>
 </html>
