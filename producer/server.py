@@ -2,7 +2,7 @@ from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from buy_now import handle_buy_now
-from test_producers.add_test_producer import publish_item
+from add_test_producer import publish_item
 from producer import publish_message
 
 client = MongoClient("mongodb://localhost:27017")
