@@ -1,5 +1,3 @@
-import random
-import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -87,26 +85,18 @@ def buy_now(watch_id, username):
 def inventory(username):
     name = username
     watches = database.get_collection("watches")
-    alert_message = ""
     watch_list = list(watches.find())
 
     if request.method == "POST":
         if "deleteItem" in request.form:
-            # Delete item logic
             model = request.form["model"]
             brand = request.form["brand"]
             watch_exists = watches.count_documents(
                 {"model": model, "brand": brand})
             if watch_exists > 0:
-                print("\nDeleting this watch ",
-                      model, " ", brand, " details\n")
                 watches.delete_one({"model": model, "brand": brand})
-                alert_message = "Item successfully deleted"
-            else:
-                alert_message = "Item wasn't found in the database. So, no item was deleted."
 
         else:
-            # Add or update item logic
             model = request.form["model"]
             brand = request.form["brand"]
             stock = request.form["stock"]
@@ -125,13 +115,10 @@ def inventory(username):
                         "image": image,
                     }
                 )
-                alert_message = "Item successfully added"
             elif "updateItem" in request.form:
                 watch_exists = watches.count_documents(
                     {"model": model, "brand": brand})
                 if watch_exists > 0:
-                    print("\nUpdating this watch ",
-                          model, " ", brand, " details\n")
                     watches.update_one(
                         {"model": model, "brand": brand},
                         {
@@ -143,17 +130,10 @@ def inventory(username):
                             }
                         },
                     )
-                    print("Item successfully updated")
-                    alert_message = "Item successfully updated"
-                else:
-                    alert_message = "Item wasn't found in the database."
 
-        # Redirect after processing the form submission
         return redirect(url_for('inventory', username=username, watch=watch_list))
 
-    return render_template(
-        "inventory.html", username=name, watches=watch_list, alert_message=alert_message
-    )
+    return render_template("inventory.html", username=name, watches=watch_list)
 
 
 @server.route("/logout")
