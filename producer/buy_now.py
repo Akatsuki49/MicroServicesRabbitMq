@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect,url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -10,13 +10,14 @@ database = client["Inventory"]
 def handle_buy_now(watch_id, username):
     # Get the watch details from the "watches" collection
     watches_collection = database["watches"]
+    watch_list = list(watches_collection.find())
     user_items_collection = database["userItem"]
     watch = watches_collection.find_one({"_id": ObjectId(watch_id)})
 
     if watch:
         # Check if the current stock is at least 1
         if watch["stock"] < 1:
-            return "Sorry, this watch is currently out of stock."
+            return redirect(url_for('home', username=username, watch=watch_list))
 
         # Get the user details (e.g., from the session or a separate collection)
         user = username
@@ -59,6 +60,8 @@ def handle_buy_now(watch_id, username):
         print(f"Model: {watch['model']}")
         print(f"ChosenStock: {chosen_stock}")
 
-        return "Buy Now action completed"
+        # return "Buy Now action completed"
+        return redirect(url_for('home', username=username, watch=watch_list))
     else:
-        return "Watch not found"
+        # return "Watch not found"
+        return redirect(url_for('home', username=username, watch=watch_list))

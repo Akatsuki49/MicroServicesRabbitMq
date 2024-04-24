@@ -75,10 +75,12 @@ def home(username):
     watches = database.get_collection("watches")
     watch_list = list(watches.find())
     name = username
-    return render_template("home.html", username=name, watches=watch_list)
+    user_items_collection = database.get_collection("userItem")
+    user_items = list(user_items_collection.find({"user": username}))
+    return render_template("home.html", username=name, watches=watch_list, user_items=user_items)
 
 
-@server.route("/buy_now/<watch_id>/<username>", methods=["GET"])
+@server.route("/buy_now/<watch_id>/<username>", methods=["GET","POST"])
 def buy_now(watch_id, username):
     return handle_buy_now(watch_id, username)
 

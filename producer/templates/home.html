@@ -35,8 +35,17 @@
 
     .navbar-brand,
     .navbar-nav .nav-link {
-      color: #ffffff !important;
+      color: #f4f4f4 !important;
       font-weight: bold; 
+    }
+    .btn {
+    background-color: #272727;
+    color: #f4f4f4;   
+    outline: #0a0a0a;
+    }
+  .btn:hover {
+    background-color: #3a3a3a;
+    color: #f4f4f4;
     }
 </style>
 <body>
@@ -69,13 +78,37 @@
                         <p class="card-text">{{ watch.itemDescription }}</p>
                         <p class="card-text">Stock: {{ watch.stock }}</p>
                         <p class="card-text">Price: ${{ watch.price }}</p>
-                        <a href="{{ url_for('buy_now', watch_id=watch._id, username=session['username']) }}" class="btn btn-primary">Buy Now</a>
+                        <a href="{{ url_for('buy_now', watch_id=watch._id, username=session['username']) }}" class="btn btn-block">Buy Now</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+    <div class="container-fluid purchaseItems">
+      <div class="row justify-content-center align-items-center">
+          <div class="col-md-8">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th style="color: #f4f4f4;" scope="col">Brand</th>
+                          <th style="color: #f4f4f4;" scope="col">Model</th>
+                          <th style="color: #f4f4f4;" scope="col">Chosen Stock</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for user_item in user_items %}
+                      <tr>
+                          <td style="color: #f4f4f4;">{{ user_item.brand }}</td>
+                          <td style="color: #f4f4f4;">{{ user_item.model }}</td>
+                          <td style="color: #f4f4f4;">{{ user_item.ChosenStock }}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>  
     {% endif %}
     <!-- ... (scripts) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
