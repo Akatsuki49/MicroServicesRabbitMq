@@ -2,6 +2,7 @@ from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from buy_now import handle_buy_now
+from test_producers.add_test_producer import publish_item
 from producer import publish_message
 
 client = MongoClient("mongodb://localhost:27017")
@@ -103,16 +104,21 @@ def inventory(username):
             image = "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg"
 
             if "addItem" in request.form:
-                watches.insert_one(
-                    {
-                        "model": model,
-                        "brand": brand,
-                        "stock": stock,
-                        "price": price,
-                        "itemDescription": itemDescription,
-                        "image": image,
-                    }
-                )
+                item_data = {
+                    "model": model,
+                    "brand": brand,
+                    "stock": stock,
+                    "price": price,
+                    "itemDescription": itemDescription,
+                    "image": image,
+                }
+                publish_item(item_data)
+                print("Item published")
+                return redirect(url_for("inventory", username=username))
+
+
+                alert_message = "Item successfully added"
+                return redirect(url_for("inventory", username=username))
             elif "updateItem" in request.form:
                 publish_message("update", model, brand,
                                 stock, price, itemDescription)
