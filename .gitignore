@@ -1,3 +1,4 @@
 inventory
 __pycache__
 myvenv/
+producer/temp.py

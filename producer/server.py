@@ -1,5 +1,7 @@
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
+from bson.objectid import ObjectId
+from buy_now import handle_buy_now
 from producer import publish_message
 
 client = MongoClient("mongodb://localhost:27017")
@@ -27,7 +29,8 @@ def register():
             if user:
                 error = "Username already exists. Please choose another."
             else:
-                user_collection.insert_one({"username": username, "password": password})
+                user_collection.insert_one(
+                    {"username": username, "password": password})
                 return redirect(url_for("login"))
     except Exception as e:
         error = "An error occurred. Please try again."
@@ -69,10 +72,14 @@ def login():
 @server.route("/home/<username>", methods=["GET", "POST"])
 def home(username):
     watches = database.get_collection("watches")
-
     watch_list = list(watches.find())
     name = username
     return render_template("home.html", username=name, watches=watch_list)
+
+
+@server.route("/buy_now/<watch_id>/<username>", methods=["GET"])
+def buy_now(watch_id, username):
+    return handle_buy_now(watch_id, username)
 
 
 @server.route("/inventory/<username>", methods=["GET", "POST"])
@@ -107,7 +114,8 @@ def inventory(username):
                     }
                 )
             elif "updateItem" in request.form:
-                publish_message("update", model, brand, stock, price, itemDescription)
+                publish_message("update", model, brand,
+                                stock, price, itemDescription)
 
         return redirect(url_for("inventory", username=username, watch=watch_list))
 
