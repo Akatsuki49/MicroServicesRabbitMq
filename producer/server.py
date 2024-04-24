@@ -2,6 +2,8 @@ import random
 import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
+from bson.objectid import ObjectId
+from buy_now import handle_buy_now
 
 client = MongoClient("mongodb://localhost:27017")
 database = client["Inventory"]
@@ -71,16 +73,14 @@ def login():
 @server.route("/home/<username>", methods=["GET", "POST"])
 def home(username):
     watches = database.get_collection("watches")
-
     watch_list = list(watches.find())
     name = username
+    return render_template("home.html", username=name, watches=watch_list)
 
-    # Define the callback function
-    def buynow(watch_id):
-        # This function will be called when the Buy Now button is clicked
-        # You can perform any necessary actions here, such as adding the item to a shopping cart
-        print(f"Buy Now clicked for watch ID: {watch_id}")
-    return render_template("home.html", username=name, watches=watch_list, buynow=buynow)
+
+@server.route("/buy_now/<watch_id>/<username>", methods=["GET"])
+def buy_now(watch_id, username):
+    return handle_buy_now(watch_id, username)
 
 
 @server.route("/inventory/<username>", methods=["GET", "POST"])
@@ -154,7 +154,6 @@ def inventory(username):
     return render_template(
         "inventory.html", username=name, watches=watch_list, alert_message=alert_message
     )
-
 
 
 @server.route("/logout")
