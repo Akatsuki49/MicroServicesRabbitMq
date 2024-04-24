@@ -2,6 +2,7 @@ import random
 import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
+from creationhehe.produce_order import publish_item
 
 client = MongoClient("mongodb://localhost:27017")
 database = client["Inventory"]
@@ -106,17 +107,18 @@ def inventory(username):
             image = "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg"
 
             if "addItem" in request.form:
-                watches.insert_one(
-                    {
-                        "model": model,
-                        "brand": brand,
-                        "stock": stock,
-                        "price": price,
-                        "description": description,
-                        "image": image,
-                    }
-                )
+                item_data = {
+                    "model": model,
+                    "brand": brand,
+                    "stock": stock,
+                    "price": price,
+                    "description": description,
+                    "image": image,
+                }
+                publish_item(item_data)
+
                 alert_message = "Item successfully added"
+                return redirect(url_for("inventory", username=username))
             elif "updateItem" in request.form:
                 watch_exists = watches.count_documents({"model": model, "brand": brand})
                 if watch_exists > 0:

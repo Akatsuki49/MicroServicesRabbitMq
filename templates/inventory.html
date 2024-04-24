@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -119,6 +119,152 @@
           <div class="card-body">
             <h5 class="card-title">{{ watch.brand }} {{ watch.model }}</h5>
             <p class="card-text">{{ watch.itemDescription }}</p>
+            <p class="card-text">Stock: {{ watch.stock }}</p>
+            <p class="card-text">Price: ${{ watch.price }}</p>
+          </div>
+        </div>
+        <br>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+    var alertMessage = "{{ alert_message }}";
+    if (alertMessage) {
+      alert(alertMessage);
+    }
+    });
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Inventory</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+</head>
+<style>
+  .watch-image {
+    width: 150px;
+    height: auto;
+    margin: auto;
+  }
+</style>
+<body>
+  {% if session['username'] %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Inventory Management System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">User: {{ session['username'] }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <h1 class="text-center"> Admin page</h1>
+  <br><br>
+  <h2 class="text-center mb-3">Add new item</h2>
+  <form id="addItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="model">Model Name</label>
+        <input type="text" class="form-control" id="model" name="model" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="brand">Brand</label>
+        <input type="text" class="form-control" id="brand" name="brand" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="stock">Stock</label>
+        <input type="number" class="form-control" id="stock" name="stock" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="price">Price</label>
+        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" name="addItem">Add Item</button>
+  </form>
+
+  <h2 class="text-center mb-3">Modify Existing Stock</h2>
+  <form id="modifyItem" action="{{ url_for('inventory', username=session['username']) }}" class="mx-5 mb-5" method="POST">
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="model">Model Name</label>
+        <input type="text" class="form-control" id="model" name="model" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="brand">Brand</label>
+        <input type="text" class="form-control" id="brand" name="brand" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="stock">Stock</label>
+        <input type="number" class="form-control" id="stock" name="stock" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="price">Price</label>
+        <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" name="updateItem">Update Item</button>
+  </form>
+  <br><br>
+
+  <h2 class="text-center mb-3">Remove Stock</h2>
+  <form id="deleteItem" class="mx-5 mb-5" action="{{ url_for('inventory', username=session['username']) }}" method="post">
+    <div class="form-row">
+      <div class="col-md-6 mb-3">
+        <label for="model">Model Name</label>
+        <input type="text" class="form-control" id="model" name="model" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="brand">Brand</label>
+        <input type="text" class="form-control" id="brand" name="brand" required>
+      </div>
+      <button type="submit" name="deleteItem" class="btn btn-primary btn-block">Delete Item</button>
+    </div>
+  </form>
+
+  <h2 class="text-center mb-3">Current Inventory</h2>
+  <div class="container">
+    <div class="row">
+      {% for watch in watches %}
+      <div class="col-md-4">
+        <div class="card watch-card">
+          <img src="{{ watch.image }}" class="card-img-top watch-image" alt="{{ watch.model }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ watch.brand }} {{ watch.model }}</h5>
+            <p class="card-text">{{ watch.description }}</p>
             <p class="card-text">Stock: {{ watch.stock }}</p>
             <p class="card-text">Price: ${{ watch.price }}</p>
           </div>
