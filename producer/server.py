@@ -1,5 +1,3 @@
-import random
-import string
 from flask import Flask, request, session, redirect, url_for, render_template
 from pymongo import MongoClient
 
@@ -8,7 +6,6 @@ database = client["Inventory"]
 
 server = Flask(__name__)
 server.secret_key = "1234"
-
 
 @server.route("/", methods=["GET", "POST"])
 def index():
@@ -33,7 +30,6 @@ def register():
     except Exception as e:
         error = "An error occurred. Please try again."
     return render_template("register.html", error=error)
-
 
 @server.route("/login", methods=["POST", "GET"])
 def login():
@@ -66,7 +62,6 @@ def login():
         error = "An error occurred. Please try again."
     return render_template("login.html", error=error)
 
-
 @server.route("/home/<username>", methods=["GET", "POST"])
 def home(username):
     watches = database.get_collection("watches")
@@ -74,7 +69,6 @@ def home(username):
     watch_list = list(watches.find())
     name = username
     return render_template("home.html", username=name, watches=watch_list)
-
 
 @server.route("/inventory/<username>", methods=["GET", "POST"])
 def inventory(username):
@@ -85,19 +79,16 @@ def inventory(username):
 
     if request.method == "POST":
         if "deleteItem" in request.form:
-            # Delete item logic
             model = request.form["model"]
             brand = request.form["brand"]
             watch_exists = watches.count_documents({"model": model, "brand": brand})
             if watch_exists > 0:
-                print("\nDeleting this watch ", model, " ", brand, " details\n")
                 watches.delete_one({"model": model, "brand": brand})
                 alert_message = "Item successfully deleted"
             else:
                 alert_message = "Item wasn't found in the database. So, no item was deleted."
 
         else:
-            # Add or update item logic
             model = request.form["model"]
             brand = request.form["brand"]
             stock = request.form["stock"]
@@ -120,7 +111,6 @@ def inventory(username):
             elif "updateItem" in request.form:
                 watch_exists = watches.count_documents({"model": model, "brand": brand})
                 if watch_exists > 0:
-                    print("\nUpdating this watch ", model, " ", brand, " details\n")
                     watches.update_one(
                         {"model": model, "brand": brand},
                         {
@@ -132,25 +122,20 @@ def inventory(username):
                             }
                         },
                     )
-                    print("Item successfully updated")
                     alert_message = "Item successfully updated"
                 else:
                     alert_message = "Item wasn't found in the database."
 
-        # Redirect after processing the form submission
         return redirect(url_for('inventory', username=username, watch=watch_list))
 
     return render_template(
         "inventory.html", username=name, watches=watch_list, alert_message=alert_message
     )
 
-
-
 @server.route("/logout")
 def logout():
     session.pop("username", None)
     return redirect(url_for("login"))
-
 
 if __name__ == "__main__":
     server.run(debug=True)
