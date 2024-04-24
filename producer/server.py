@@ -74,7 +74,6 @@ def home(username):
 def inventory(username):
     name = username
     watches = database.get_collection("watches")
-    alert_message = ""
     watch_list = list(watches.find())
 
     if request.method == "POST":
@@ -84,9 +83,6 @@ def inventory(username):
             watch_exists = watches.count_documents({"model": model, "brand": brand})
             if watch_exists > 0:
                 watches.delete_one({"model": model, "brand": brand})
-                alert_message = "Item successfully deleted"
-            else:
-                alert_message = "Item wasn't found in the database. So, no item was deleted."
 
         else:
             model = request.form["model"]
@@ -107,7 +103,6 @@ def inventory(username):
                         "image": image,
                     }
                 )
-                alert_message = "Item successfully added"
             elif "updateItem" in request.form:
                 watch_exists = watches.count_documents({"model": model, "brand": brand})
                 if watch_exists > 0:
@@ -122,15 +117,10 @@ def inventory(username):
                             }
                         },
                     )
-                    alert_message = "Item successfully updated"
-                else:
-                    alert_message = "Item wasn't found in the database."
 
         return redirect(url_for('inventory', username=username, watch=watch_list))
 
-    return render_template(
-        "inventory.html", username=name, watches=watch_list, alert_message=alert_message
-    )
+    return render_template("inventory.html", username=name, watches=watch_list)
 
 @server.route("/logout")
 def logout():
