@@ -14,6 +14,10 @@ def handle_buy_now(watch_id, username):
     watch = watches_collection.find_one({"_id": ObjectId(watch_id)})
 
     if watch:
+        # Check if the current stock is at least 1
+        if watch["stock"] < 1:
+            return "Sorry, this watch is currently out of stock."
+
         # Get the user details (e.g., from the session or a separate collection)
         user = username
 
@@ -42,6 +46,12 @@ def handle_buy_now(watch_id, username):
             }
             result = user_items_collection.insert_one(new_entry)
             chosen_stock = 1
+
+        # Reduce the stock of the watch by 1
+        watches_collection.update_one(
+            {"_id": watch["_id"]},
+            {"$inc": {"stock": -1}}
+        )
 
         # Log the required information
         print(f"Username: {user}")
