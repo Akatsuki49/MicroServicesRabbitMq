@@ -2,7 +2,7 @@ import pika
 import time
 from pymongo import MongoClient
 from threading import Thread
-from bson  import ObjectId
+from bson import ObjectId
 import signal
 import sys
 
@@ -29,6 +29,7 @@ channel.queue_declare(queue=rabbit_queue)
 channel.queue_bind(
     exchange=rabbit_exchange, queue=rabbit_queue, routing_key="order_processing"
 )
+
 
 def callback(ch, method, properties, body):
     message = body.decode("utf-8").split(",")
@@ -70,10 +71,12 @@ def callback(ch, method, properties, body):
     )
 
     # Log the required information
-    print(f"Username: {user}, Brand: {brand}, Model: {model}, ChosenStock: {chosen_stock}\n[] Done")
+    print(
+        f"Username: {user}, Brand: {brand}, Model: {model}, ChosenStock: {chosen_stock}\n[] Done")
 
-    
-channel.basic_consume(on_message_callback=callback, queue=rabbit_queue, auto_ack=True)
+
+channel.basic_consume(on_message_callback=callback,
+                      queue=rabbit_queue, auto_ack=True)
 print(" [*] Waiting for notify messages. To exit press CTRL+C")
 channel.start_consuming()
 

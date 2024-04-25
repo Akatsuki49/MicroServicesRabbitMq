@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, url_for, render_template, jsonify
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from buy_now import handle_buy_now
@@ -80,7 +80,7 @@ def home(username):
     return render_template("home.html", username=name, watches=watch_list, user_items=user_items)
 
 
-@server.route("/buy_now/<watch_id>/<username>", methods=["GET","POST"])
+@server.route("/buy_now/<watch_id>/<username>", methods=["GET", "POST"])
 def buy_now(watch_id, username):
     return handle_buy_now(watch_id, username)
 
@@ -117,7 +117,7 @@ def inventory(username):
                 publish_item(item_data)
                 print("Item published")
                 return redirect(url_for("inventory", username=username))
-            
+
             elif "updateItem" in request.form:
                 publish_message("update", model, brand,
                                 stock, price, itemDescription)
@@ -125,6 +125,21 @@ def inventory(username):
         return redirect(url_for("inventory", username=username, watch=watch_list))
 
     return render_template("inventory.html", username=name, watches=watch_list)
+
+
+@server.route("/get_active", methods=["GET"])
+def get_active():
+    try:
+        # Prepare the activity data
+        activity_data = {
+            "server_name": "Producer",
+            "status": "active"
+        }
+
+        # Return the activity data as a JSON response
+        return jsonify(activity_data), 200
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500
 
 
 @server.route("/logout")
