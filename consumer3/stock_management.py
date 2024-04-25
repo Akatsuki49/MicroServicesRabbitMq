@@ -12,7 +12,7 @@ rabbit_exchange = "stock_management_exchange"
 rabbit_queue = "stock_management_queue"
 
 # MongoDB connection details
-mongo_host = "localhost"
+mongo_host = "host.docker.internal"
 mongo_port = 27017
 
 # Connect to MongoDB
