@@ -6,7 +6,8 @@ import signal
 import sys
 
 # RabbitMQ connection details
-rabbit_host = "localhost"
+# rabbit_host = "localhost"
+rabbit_host = "host.docker.internal"
 rabbit_exchange = "stock_management_exchange"
 rabbit_queue = "stock_management_queue"
 
@@ -20,7 +21,8 @@ database = client["Inventory"]
 watches = database.get_collection("watches")
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=rabbit_host))
 channel = connection.channel()
 
 # Declare the exchange and queue
@@ -76,7 +78,8 @@ def delete_item(model, brand):
 
 # Start consuming messages
 print("Waiting for stock management messages. To exit press CTRL+C")
-channel.basic_consume(queue=rabbit_queue, on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue=rabbit_queue,
+                      on_message_callback=callback, auto_ack=True)
 channel.start_consuming()
 
 # # RabbitMQ connection details

@@ -76,6 +76,7 @@ from pymongo import MongoClient
 
 # RabbitMQ connection parameters
 rabbitmq_host = "host.docker.internal"
+# rabbitmq_host = "localhost"
 rabbitmq_port = 5672
 rabbitmq_queue = "item_creation"
 rabbitmq_exchange = "add_item"
