@@ -24,8 +24,6 @@
 #     sys.exit(1)
 
 
-
-
 # # Connect to RabbitMQ
 # connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
 # channel = connection.channel()
@@ -61,7 +59,7 @@
 #         "description": description,
 #         "image": image,
 #     })
-    
+
 #     print("Item inserted in MongoDB")
 
 #     # Acknowledge the message
@@ -89,7 +87,8 @@ mongo_db = "Inventory"
 mongo_collection = "watches"
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
 channel = connection.channel()
 
 # Declare the exchange
@@ -105,6 +104,7 @@ channel.queue_bind(exchange=rabbitmq_exchange, queue=rabbitmq_queue)
 client = MongoClient(mongo_host, mongo_port)
 db = client[mongo_db]
 collection = db[mongo_collection]
+
 
 def publish_message(ch, method, properties, body):
     """
@@ -125,7 +125,9 @@ def publish_message(ch, method, properties, body):
     # Acknowledge the message
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
+
 # Start consuming messages
 print("Waiting for messages...")
-channel.basic_consume(queue=rabbitmq_queue, on_message_callback=publish_message, auto_ack=False)
+channel.basic_consume(queue=rabbitmq_queue,
+                      on_message_callback=publish_message, auto_ack=False)
 channel.start_consuming()
