@@ -20,8 +20,7 @@ database = client["Inventory"]
 watches = database.get_collection("watches")
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbit_host))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
 channel = connection.channel()
 
 # Declare the exchange and queue
@@ -55,8 +54,8 @@ def update_item(model, brand, stock, price, itemDescription):
             {"model": model, "brand": brand},
             {
                 "$set": {
-                    "stock": stock,
-                    "price": price,
+                    "stock": int(stock),
+                    "price": int(price),
                     "itemDescription": itemDescription,
                     "image": "https://images-cdn.ubuy.co.in/6537918bb0cbde4d66135ca0-rolex-oyster-perpetual-41mm-automatic.jpg",
                 }
@@ -77,8 +76,7 @@ def delete_item(model, brand):
 
 # Start consuming messages
 print("Waiting for stock management messages. To exit press CTRL+C")
-channel.basic_consume(queue=rabbit_queue,
-                      on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue=rabbit_queue, on_message_callback=callback, auto_ack=True)
 channel.start_consuming()
 
 # # RabbitMQ connection details
