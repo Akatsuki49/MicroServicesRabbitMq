@@ -8,6 +8,7 @@ import sys
 
 # RabbitMQ connection details
 rabbit_host = 'host.docker.internal'
+# rabbit_host = 'localhost'
 rabbit_exchange = 'order_processing_exchange'
 rabbit_queue = 'order_processing'
 

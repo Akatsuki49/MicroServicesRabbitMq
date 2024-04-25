@@ -3,12 +3,13 @@ import requests
 import threading
 
 # RabbitMQ management plugin details
-rabbitmq_host = 'localhost'
+# rabbitmq_host = 'localhost'
+rabbitmq_host = 'host.docker.internal'
 rabbitmq_port = 15672  # Default management plugin port
 rabbitmq_user = 'guest'
 rabbitmq_pass = 'guest'
 
-producer_server_url = "http://localhost:5000/get_active"
+producer_server_url = "https://feae-1-6-74-117.ngrok-free.app/get_active"
 
 
 def check_producer_health():
