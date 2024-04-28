@@ -3,11 +3,15 @@ from flask import Flask, render_template, redirect,url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-client = MongoClient("mongodb://localhost:27017")
+mongo_host = "mongodb"
+mongo_port = 27017
+
+# Connect to MongoDB
+client = MongoClient(mongo_host, mongo_port)
 database = client["Inventory"]
 
 
-rabbit_host = "localhost"
+rabbit_host = "rabbitmq"
 rabbit_exchange = "order_processing_exchange"
 rabbit_queue = "order_processing_queue"
 

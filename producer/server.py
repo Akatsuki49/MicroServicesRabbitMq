@@ -5,7 +5,11 @@ from buy_now import handle_buy_now
 from add_test_producer import publish_item
 from producer import publish_message
 
-client = MongoClient("mongodb://localhost:27017")
+mongo_host = "mongodb"
+mongo_port = 27017
+
+# Connect to MongoDB
+client = MongoClient(mongo_host, mongo_port)
 database = client["Inventory"]
 
 server = Flask(__name__)
@@ -66,6 +70,7 @@ def login():
             else:
                 error = "Incorrect username or password. Please try again."
     except Exception as e:
+        print(e)
         error = "An error occurred. Please try again."
     return render_template("login.html", error=error)
 
@@ -149,4 +154,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    server.run(debug=True)
+    server.run(host='0.0.0.0', debug=True)
+    # app.run(host='0.0.0.0')
+

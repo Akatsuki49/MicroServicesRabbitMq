@@ -28,7 +28,7 @@ import pika
 import json
 
 # RabbitMQ connection parameters
-rabbitmq_host = "localhost"
+rabbitmq_host = "rabbitmq"
 rabbitmq_exchange = "add_item"
 rabbitmq_port = 5672
 rabbitmq_queue = "item_creation"
