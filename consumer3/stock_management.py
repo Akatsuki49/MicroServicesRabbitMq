@@ -7,12 +7,12 @@ import sys
 
 # RabbitMQ connection details
 # rabbit_host = "localhost"
-rabbit_host = "host.docker.internal"
+rabbit_host = "rabbitmq"
 rabbit_exchange = "stock_management_exchange"
 rabbit_queue = "stock_management_queue"
 
 # MongoDB connection details
-mongo_host = "host.docker.internal"
+mongo_host = "mongodb"
 mongo_port = 27017
 
 # Connect to MongoDB

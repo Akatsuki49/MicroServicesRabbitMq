@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # RabbitMQ connection port
+      - "15672:15672"  # RabbitMQ web management UI port
+    networks:
+      - my_network
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"  # MongoDB default port
+    networks:
+      - my_network
+
+  consumer1:
+    build:
+      context: ./consumer1
+    environment:
+      - RABBITMQ_HOST=rabbitmq  # Service name as hostname
+      - MONGO_HOST=mongodb  # Service name as hostname
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - my_network
+
+  consumer2:
+    build:
+      context: ./consumer2
+    environment:
+      - RABBITMQ_HOST=rabbitmq  # Service name as hostname
+      - MONGO_HOST=mongodb  # Service name as hostname
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - my_network
+
+  consumer3:
+    build:
+      context: ./consumer3
+    environment:
+      - RABBITMQ_HOST=rabbitmq  # Service name as hostname
+      - MONGO_HOST=mongodb  # Service name as hostname
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - my_network
+
+  producer:
+    build:
+      context: ./producer
+    ports:
+      - "5000:5000"
+    environment:
+      - RABBITMQ_HOST=rabbitmq  # Service name as hostname
+      - MONGO_HOST=mongodb  # Service name as hostname
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - my_network
+
+  consumerhealth:
+    build:
+      context: ./consumer_health
+    environment:
+      - RABBITMQ_HOST=rabbitmq  # Service name as hostname
+      - MONGO_HOST=mongodb  # Service name as hostname
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - my_network
+
+networks:
+  my_network:

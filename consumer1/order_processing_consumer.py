@@ -7,12 +7,12 @@ import signal
 import sys
 
 # RabbitMQ connection details
-rabbit_host = 'host.docker.internal'
+rabbit_host = 'rabbitmq'
 # rabbit_host = 'localhost'
 rabbit_exchange = 'order_processing_exchange'
 rabbit_queue = 'order_processing'
 
-mongo_host = "host.docker.internal"
+mongo_host = "mongodb"
 mongo_port = 27017
 
 client = MongoClient(mongo_host, mongo_port)

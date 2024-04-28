@@ -75,14 +75,14 @@ import json
 from pymongo import MongoClient
 
 # RabbitMQ connection parameters
-rabbitmq_host = "host.docker.internal"
+rabbitmq_host = "rabbitmq"
 # rabbitmq_host = "localhost"
 rabbitmq_port = 5672
 rabbitmq_queue = "item_creation"
 rabbitmq_exchange = "add_item"
 
 # MongoDB connection parameters
-mongo_host = "host.docker.internal"
+mongo_host = "mongodb"
 mongo_port = 27017
 mongo_db = "Inventory"
 mongo_collection = "watches"
@@ -112,6 +112,8 @@ def publish_message(ch, method, properties, body):
     Callback function to process the received message.
     """
     item_data = json.loads(body)
+    item_data["stock"] = int(item_data["stock"])
+    item_data["price"] = int(item_data["price"])
     print(f"Received item: {item_data}")
 
     # Insert or update the item in the MongoDB collection

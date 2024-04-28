@@ -9,6 +9,9 @@ COPY . /app
 
 ENV PYTHONUNBUFFERED=1
 
+ENV RABBITMQ_HOST=rabbitmq
+ENV MONGO_HOST=mongodb
+
 # Install dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 

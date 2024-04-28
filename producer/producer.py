@@ -1,7 +1,7 @@
 import pika
 
 # RabbitMQ connection details
-rabbit_host = "localhost"
+rabbit_host = "rabbitmq"
 rabbit_exchange = "stock_management_exchange"
 rabbit_queue = "stock_management_queue"
 
