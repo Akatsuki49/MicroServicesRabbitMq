@@ -21,7 +21,7 @@ watches_collection = database.get_collection("watches")
 user_items_collection = database.get_collection('userItem')
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbit_host))
+    pika.ConnectionParameters(host=rabbit_host,heartbeat=600))
 channel = connection.channel()
 
 # Declare the exchange and queue

@@ -15,7 +15,7 @@ rabbit_host = "rabbitmq"
 rabbit_exchange = "order_processing_exchange"
 rabbit_queue = "order_processing_queue"
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host,heartbeat=600))
 channel = connection.channel()
 
 channel.exchange_declare(exchange=rabbit_exchange, exchange_type="direct")

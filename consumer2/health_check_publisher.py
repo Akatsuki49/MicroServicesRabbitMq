@@ -11,7 +11,7 @@ health_check_exchange = "health_check_exchange"
 health_check_queue = "health_check_queue"
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port,heartbeat=600))
 channel = connection.channel()
 
 # Declare the health check exchange
