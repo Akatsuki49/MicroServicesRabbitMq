@@ -17,7 +17,7 @@ python ./server.py
 ```
 
 * Run docker compose
-* ```cmd
+```cmd
   docker-compose up --build
-  ```
+```
 
