@@ -16,3 +16,8 @@ pip install -r ./requirements.txt
 python ./server.py
 ```
 
+* Run docker compose
+```cmd
+  docker-compose up --build
+```
+
