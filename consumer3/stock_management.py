@@ -22,7 +22,7 @@ watches = database.get_collection("watches")
 
 # Connect to RabbitMQ
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbit_host))
+    pika.ConnectionParameters(host=rabbit_host,heartbeat=600))
 channel = connection.channel()
 
 # Declare the exchange and queue

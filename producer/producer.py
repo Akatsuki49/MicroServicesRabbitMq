@@ -6,7 +6,7 @@ rabbit_exchange = "stock_management_exchange"
 rabbit_queue = "stock_management_queue"
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host,heartbeat=600))
 channel = connection.channel()
 
 # Declare the exchange and queue

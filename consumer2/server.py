@@ -11,7 +11,7 @@ routing_key = 'health_check_queue.report'
 
 # Connect to RabbitMQ
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbit_host))
+    pika.ConnectionParameters(host=rabbit_host,heartbeat=600))
 channel = connection.channel()
 channel.exchange_declare(exchange=rabbit_queue, exchange_type="direct")
 

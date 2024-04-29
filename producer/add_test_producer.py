@@ -34,7 +34,7 @@ rabbitmq_port = 5672
 rabbitmq_queue = "item_creation"
 
 # Connect to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, port=rabbitmq_port,heartbeat=600))
 channel = connection.channel()
 
 # Declare the exchange
