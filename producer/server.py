@@ -1,6 +1,5 @@
 from flask import Flask, request, session, redirect, url_for, render_template, jsonify
 from pymongo import MongoClient
-from bson.objectid import ObjectId
 from buy_now import handle_buy_now
 from add_test_producer import publish_item
 from producer import publish_message
@@ -155,5 +154,3 @@ def logout():
 
 if __name__ == "__main__":
     server.run(host='0.0.0.0', debug=True)
-    # app.run(host='0.0.0.0')
-

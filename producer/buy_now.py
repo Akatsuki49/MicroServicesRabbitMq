@@ -1,5 +1,5 @@
 import pika
-from flask import Flask, render_template, redirect,url_for
+from flask import redirect,url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 

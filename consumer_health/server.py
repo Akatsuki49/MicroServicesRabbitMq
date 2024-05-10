@@ -1,6 +1,7 @@
 import time
 import requests
 import threading
+import random
 
 # RabbitMQ management plugin details
 # rabbitmq_host = 'localhost'
