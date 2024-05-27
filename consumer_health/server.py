@@ -10,6 +10,10 @@ rabbitmq_port = 15672  # Default management plugin port
 rabbitmq_user = 'guest'
 rabbitmq_pass = 'guest'
 
+# all_queues = ["item_creation", "order_processing",
+#               "order_processing_queue", "stock_management_queue"]
+
+
 producer_server_url = "http://producer:5000/get_active"
 
 
@@ -35,22 +39,36 @@ def check_producer_health():
 
 
 def check_rabbitmq_connections():
-    url = f"http://{rabbitmq_host}:{rabbitmq_port}/api/connections"
+    url = f"http://{rabbitmq_host}:{rabbitmq_port}/api/queues/"
     try:
         response = requests.get(url, auth=(rabbitmq_user, rabbitmq_pass))
         if response.status_code == 200:
-            connections = response.json()
-            # print(connections)
+            res = response.json()
+            # print(res)
             total_consumers = 0
-            for connection in connections:
-                total_consumers += connection['channels']
+            for queue in res:
+                curr_status = queue['consumers']
+                total_consumers += curr_status
+                if (curr_status > 0):
+                    print(f"Consumer: {queue['name']} is up")
+                else:
+                    print(f"Consumer: {queue['name']} is down")
+
             print(f"Total Consumers: {total_consumers}")
-            for connection in connections:
-                host = connection.get('host')
-                name = connection.get('name')
-                print(f"Host: {host}, Name: {name}")
+
+            # for queue in res:
+            #     queue_name = queue['name']
+            #     queue_status = queue['state']
+
+            #     # even if consumer stops queue is still on and listening one problem this is
+
+            #     if queue_status == 'running':
+            #         print(f"Consumer: {queue_name} is up")
+            #     else:
+            #         print(f"Consumer: {queue_name} is down")
+
         else:
-            print("Failed to fetch RabbitMQ connections")
+            print("Failed to fetch RabbitMQ queues")
     except Exception as e:
         print(f"Error: {e}")
 
