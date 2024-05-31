@@ -1,4 +1,4 @@
-![Screenshot (398)](https://github.com/Akatsuki49/558_559_587_609_3/assets/95576716/0b430700-7f96-46af-a3ca-3f4e6f8eb2ff)# 558_559_587_609_3
+# 558_559_587_609_3
 Microservices communication using RabbitMQ
 
 
