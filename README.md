@@ -41,6 +41,7 @@ Our inventory management system is a simplified version, designed to demonstrate
   - Data Partitioning and Sharding: We can implement data sharding to distribute data across multiple databases or nodes, improving performance and scalability.
     The sharding strategy in our simple DB model:
     eg:
+    
     `"watches" Collection`: shard based on brand(hash-based), price-range (range-based). Sharding based on brand distributes inventory items across shards by brand, allowing for efficient queries related to specific brands and balancing the load based on brand popularity.
     A sharding key must be chosen such that it evenly distributes data across shards to avoid hotspots and also aligns with common query patterns
   - Indexing: Indexing is a crucial technique for improving query performance in databases. For example, in the watches collection, creating an index on the brand field allows for faster retrieval of watches by brand, reducing the time required for queries that filter by brand. 
