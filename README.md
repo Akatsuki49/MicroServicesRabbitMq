@@ -1,5 +1,26 @@
 # Microservices communication using RabbitMQ
 
+# Introduction:
+In large-scale businesses like Amazon, Flipkart, and Zepto, inventory management systems are crucial for ensuring efficient stock levels, order processing, and overall inventory control. Key considerations for such systems include:
+* Scalability: Handle millions of transactions seamlessly, up to 10000 DB reads/s and up to 2000 DB writes/s
+* High Availability: Ensure minimal downtime.
+* Consistency: Maintain accurate stock levels across multiple locations, multiple caches, and maybe in multiple DBs.
+* Performance: Fast response times for stock queries and updates.
+* Failure Tolerance/Recovery: Recover gracefully from failures.
+* Security: Protect inventory data and ensure authorized access for certain operations such as updating inventory levels/ adding new items.
+
+# Key Features of Large-Scale Inventory Management Systems(Part of Amazon, Flipkart, Zepto, etc):
+* Microservices Architecture: Decoupled services for flexibility and independent service testing, scaling and deployments.
+* Asynchronous Communication: Using message brokers like RabbitMQ or Kafka for efficient, decoupled inter-service communication.
+* Distributed Databases: Using polyglot persistence (multiple DBs) for optimal performance across various data operations.
+* Event-Driven Design: Implementing event sourcing and CQRS for real-time inventory updates and separate read/write operations. This way we can incentivise DB reads. A master-slave architecture with eventual consistency like Cassandra can be used as read DB. The write DB can be something that supports stronger consistency like PostgresSQL. Sync between these DBs can be done using a message broker like rabbitMQ/ Kafka.
+  
+* Advanced Monitoring: Comprehensive monitoring and alerting with tools like Prometheus and Grafana.
+* Robust Security: Implementing strong authentication, encryption, and compliance with industry standards.
+
+
+# Inventory Management system in 
+
 **Register/Login Pages:**
 
 ![Login/Register Frontend](https://github.com/Akatsuki49/558_559_587_609_3/assets/95576716/7286a959-8fa6-49c4-acb7-139086086904)
